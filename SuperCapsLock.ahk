@@ -86,7 +86,6 @@ CapsLock & v:: Send, ^v
 CapsLock & z:: Send, ^z  
 CapsLock & x:: Send, ^x  
 CapsLock & q:: Send, ^q  
-CapsLock & q:: Send, ^q  
 CapsLock & g:: Send, ^g  
 CapsLock & r:: Send, ^r
 CapsLock & t:: Send, ^t
