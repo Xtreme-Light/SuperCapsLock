@@ -6,9 +6,19 @@ SetWorkingDir %A_ScriptDir%  ;
 
 ; 这个脚本主要是希望CapsLock去代替RControl
 
+#InstallKeybdHook
+SendSuppressedKeyUp(key) {
+    DllCall("keybd_event"
+        , "char", GetKeyVK(key)
+        , "char", GetKeySC(key)
+        , "uint", KEYEVENTF_KEYUP := 0x2
+        , "uptr", KEY_BLOCK_THIS := 0xFFC3D450)
+}
+
+
 SetStoreCapslockMode, Off
 ;一直关闭 Capslock
-SetCapsLockState, AlwaysOff  
+; SetCapsLockState, AlwaysOff  
 ;更换图标
 I_Icon = panda.ico
 IfExist, %I_Icon%
@@ -26,9 +36,16 @@ MouseIsOver(WinTitle) {
 	return WinExist(WinTitle . " ahk_id " . Win)
 }
 
-; https://wyagd001.github.io/zh-cn/docs/commands/GetKeyState.htm
+; https://wyagd001.github.io/zh-cn/docs/RControlcommands/GetKeyState.htm
 ; 如果键是按下的(或打开了), 函数返回 1, 如果是松开的, 则返回 0.
-CapsLock::RCtrl
+; CapsLock::
+; KeyWait CapsLock
+; Send {RControl}
+; return
+
+RControl::
+Send {Esc}
+return
 
 >^k::
 Send {Up}
@@ -82,5 +99,41 @@ return
 
 
 
+; ----- 在桌面按下鼠标中键(滚轮键) 隐藏/显示桌面图标 -----
+; ~MButton::
+; {
+;     MouseGetPos mX, mY, pId ; 获取鼠标悬浮窗口类名
+;     MouseClass := WinGetClass("ahk_id " pId)
+;     if (MouseClass = "WorkerW") { ; 判断当前鼠标是否悬浮在桌面
+;         pId := ControlGetHwnd("SysListView321", "ahk_class WorkerW") ; 获取桌面图标层ID
+;         if (DllCall("User32\IsWindowVisible", "UInt", pId)) { ; 判断当前桌面图标显隐状态
+;             WinHide "ahk_id " pId
+;         } else {
+;             WinShow "ahk_id " pId
+;         }
+;     }
+; }
+~MButton::
+HideOrShowDesktopIcons()
+return
 
+HideOrShowDesktopIcons()
+{
+	ControlGet, class, Hwnd,, SysListView321, ahk_class Progman
+	If class =
+		ControlGet, class, Hwnd,, SysListView321, ahk_class WorkerW
+	{
+		hw_tray := DllCall( "FindWindowEx", "uint",0, "uint",0, "str","Shell_TrayWnd", "uint",0 )
+		If DllCall("IsWindowVisible", UInt,class)
+		{
+			WinHide, ahk_id %class%
+			WinHide, ahk_id %hw_tray%
+		}
+		Else{
+			WinShow, ahk_id %class%
+			WinShow, ahk_id %hw_tray%}
+			
+		}
+	}
+}
 
