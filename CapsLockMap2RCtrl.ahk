@@ -1,4 +1,4 @@
-#SingleInstance force
+﻿#SingleInstance force
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; https://wyagd001.github.io/zh-cn/docs/commands/_NoEnv.htm
 SendMode Input  ; 让 Send 与 SendInput 同义. 由于其卓越的速度和可靠性, 推荐新脚本使用.  https://wyagd001.github.io/zh-cn/docs/commands/SendMode.htm
@@ -8,17 +8,17 @@ SetWorkingDir %A_ScriptDir%  ;
 
 #InstallKeybdHook
 SendSuppressedKeyUp(key) {
-    DllCall("keybd_event"
-        , "char", GetKeyVK(key)
-        , "char", GetKeySC(key)
-        , "uint", KEYEVENTF_KEYUP := 0x2
-        , "uptr", KEY_BLOCK_THIS := 0xFFC3D450)
+	DllCall("keybd_event"
+		, "char", GetKeyVK(key)
+		, "char", GetKeySC(key)
+		, "uint", KEYEVENTF_KEYUP := 0x2
+		, "uptr", KEY_BLOCK_THIS := 0xFFC3D450)
 }
 
 
 SetStoreCapslockMode, Off
 ;一直关闭 Capslock
-; SetCapsLockState, AlwaysOff  
+; SetCapsLockState, AlwaysOff
 ;更换图标
 I_Icon = panda.ico
 IfExist, %I_Icon%
@@ -44,56 +44,56 @@ MouseIsOver(WinTitle) {
 ; return
 
 RControl::
-Send {Esc}
+	Send {Esc}
 return
 
 >^k::
-Send {Up}
+	Send {Up}
 return
 
 >^j::
-Send {Down}
+	Send {Down}
 return
 
 >^l::
-Send {Right}
+	Send {Right}
 return
 
 >^h::
-Send {Left}
+	Send {Left}
 return
 
 >^a::
-Send {Home}
+	Send {Home}
 return
 
 >^e::
-Send {End}
+	Send {End}
 return
 
 >^d::
-Send {Del}
+	Send {Del}
 return
 
 >^f::
-Send ^{Right}
+	Send ^{Right}
 return
 
 >^b::
-Send ^{Left}
+	Send ^{Left}
 return
 
 <^#c::
- 	; null=
- 	;多谢 helfee 的提醒，删除线部分是多余的。
-    Send ^c
- 	Sleep,200
- 	Clipboard=%Clipboard% ;%null%
- 	; 这句还是废话一下：windows 复制的时候，剪贴板保存的是“路径”。只是路径不是字符串，只要转换成字符串就可以粘贴出来了。
- 	ToolTip,%Clipboard%
- 	Sleep,500
- 	ToolTip,
- return
+	; null=
+	;多谢 helfee 的提醒，删除线部分是多余的。
+	Send ^c
+	Sleep,200
+	Clipboard=%Clipboard% ;%null%
+	; 这句还是废话一下：windows 复制的时候，剪贴板保存的是“路径”。只是路径不是字符串，只要转换成字符串就可以粘贴出来了。
+	ToolTip,%Clipboard%
+	Sleep,500
+	ToolTip,
+return
 
 
 
@@ -114,26 +114,25 @@ return
 ;     }
 ; }
 ~MButton::
-HideOrShowDesktopIcons()
+	HideOrShowDesktopIcons()
 return
 
+; 不隐藏任务栏，只隐藏桌面图标
 HideOrShowDesktopIcons()
 {
 	ControlGet, class, Hwnd,, SysListView321, ahk_class Progman
-	If class =
-		ControlGet, class, Hwnd,, SysListView321, ahk_class WorkerW
-	{
-		hw_tray := DllCall( "FindWindowEx", "uint",0, "uint",0, "str","Shell_TrayWnd", "uint",0 )
-		If DllCall("IsWindowVisible", UInt,class)
+	if class =
+	  ControlGet, class, Hwnd,, SysListView321, ahk_class WorkerW
+		if DllCall("IsWindowVisible", UInt,class)
 		{
+			; hw_tray := DllCall( "FindWindowEx", "uint",0, "uint",0, "str","Shell_TrayWnd", "uint",0 )
 			WinHide, ahk_id %class%
-			WinHide, ahk_id %hw_tray%
+			; WinHide, ahk_id %hw_tray%
 		}
-		Else{
+		else{
+			; hw_tray := DllCall( "FindWindowEx", "uint",0, "uint",0, "str","Shell_TrayWnd", "uint",0 )
 			WinShow, ahk_id %class%
-			WinShow, ahk_id %hw_tray%}
-			
+			; WinShow, ahk_id %hw_tray%}
 		}
-	}
 }
 
