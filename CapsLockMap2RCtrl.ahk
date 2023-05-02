@@ -83,6 +83,11 @@ return
 	Send ^{Left}
 return
 
+
+>^Space::
+	Send {Backspace}
+return
+
 <^#c::
 	; null=
 	;多谢 helfee 的提醒，删除线部分是多余的。
